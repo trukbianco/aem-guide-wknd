@@ -19,9 +19,11 @@ import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_T
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.models.annotations.Default;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
@@ -33,7 +35,7 @@ import com.day.cq.wcm.api.PageManager;
 
 import java.util.Optional;
 
-@Model(adaptables = Resource.class)
+@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class HelloWorldModel {
 
     @ValueMapValue(name=PROPERTY_RESOURCE_TYPE, injectionStrategy=InjectionStrategy.OPTIONAL)
@@ -46,6 +48,12 @@ public class HelloWorldModel {
     private ResourceResolver resourceResolver;
 
     private String message;
+
+    @ValueMapValue
+    private String text;
+
+    @ValueMapValue
+    private String title;
 
     @PostConstruct
     protected void init() {
@@ -63,4 +71,12 @@ public class HelloWorldModel {
         return message;
     }
 
-}
+    public String getText() {
+        return StringUtils.isNotBlank(text) ? text.toUpperCase() : null;
+    }
+
+    public String getTitle() {
+        return StringUtils.isNotBlank(title) ? title : "Valore di default";
+    }
+
+}   
